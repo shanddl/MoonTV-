@@ -1,1 +1,28 @@
+name: MoonTV Fork 搜索脚本定时运行
 
+on:
+  schedule:
+    # 每天 UTC 时间 1 点执行一次，cron 表达式可根据需求调整
+    - cron: '0 1 * * *'
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout 代码
+      uses: actions/checkout@v2
+
+    - name: 设置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: 安装依赖
+      run: pip install requests
+
+    - name: 运行搜索脚本
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供的令牌，有限权限
+      run: python your_search_script.py
